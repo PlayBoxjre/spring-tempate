@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="                                               
+            http://www.springframework.org/schema/beans    
+            http://www.springframework.org/schema/beans/spring-beans.xsd    
+            http://www.springframework.org/schema/context     
+            http://www.springframework.org/schema/context/spring-context.xsd    
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd "
+       default-autowire="byName">
+
+    <context:annotation-config></context:annotation-config>
+    <context:component-scan base-package="com.playboxjre.spring.learn"/>
+    <bean id="function01" name="fun1,first;fun_one fun_1" class="com.playboxjre.spring.learn.container.Function01">
+        <property name="tag" value="func1 / func2"/>
+    </bean>
+    <bean id="function02" name="fun2" class="com.playboxjre.spring.learn.container.Function02">
+        <property name="tag" value="fun2 "/>
+    </bean>
+
+    <alias name="function01" alias="f1"/>
+    <alias name="function02" alias="f2"/>
+
+    <!-- 使用静态工厂实例化对象-->
+    <bean id="animal" class="com.playboxjre.spring.learn.bean.AnimalFactory"
+          factory-method="createInstance"/>
+
+    <!-- 使用实例工厂实例化对象 -->
+    <bean id="animalFactory" class="com.playboxjre.spring.learn.bean.AnimalFactory"/>
+    <bean id="dog" factory-bean="animalFactory" factory-method="createDog"/>
+    <bean id="bird" class="com.playboxjre.spring.learn.bean.Bird">
+        <qualifier type="com.playboxjre.spring.learn.annotations.CustomQualifier" value="bird"/>
+    </bean>
+
+    <bean id="t" class="com.playboxjre.spring.learn.bean.Bird">
+        <qualifier type="com.playboxjre.spring.learn.annotations.CustomQualifier" value="t"/>
+    </bean>
+
+
+    <bean id="qu" class="com.playboxjre.spring.learn.annotations.QualifierImp">
+
+    </bean>
+
+    <bean id="postConstructImp" class="com.playboxjre.spring.learn.annotations.PostConstructImp"/>
+
+
+</beans>  

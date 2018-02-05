@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd
+               http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/cache
+            http://www.springframework.org/schema/cache/spring-cache.xsd"
+       default-autowire="byName">
+    <context:component-scan base-package="com.playboxjre.spring.learn.mvc.controllers"/>
+
+    <!-- 或者直接开启  <context:component-scan base-package=""-->
+    <mvc:annotation-driven/>
+
+    <mvc:default-servlet-handler/>
+
+    <context:property-placeholder     file-encoding="UTF-8" ignore-unresolvable="true" location="classpath:spring/properties/*-ph.properties"/>
+
+
+    <!--<mvc:resources mapping="*.html,resources/**" location="/resources/**,/WEB-INF/resources/**"/>-->
+    <!-- 视图查找器 根据视图名来匹配实际的视图文件 -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="contentType" value="UTF-8"/>
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+    </bean>
+
+
+
+    <bean id="userRepo" class="com.playboxjre.spring.learn.mvc.repositories.InternalSaver">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="com.playboxjre.spring.learn.mvc.repositories.save.User">
+                <entry key="kong">
+                    <bean class="com.playboxjre.spring.learn.mvc.repositories.save.User">
+                        <property name="name" value="kong"/>
+                        <property name="age" value="189"/>
+                    </bean>
+                </entry>
+                <entry key="liu">
+                    <bean class="com.playboxjre.spring.learn.mvc.repositories.save.User">
+                        <property name="name" value="liu"/>
+                        <property name="age" value="18"/>
+                    </bean>
+                </entry>
+                <entry key="zhao">
+                    <bean class="com.playboxjre.spring.learn.mvc.repositories.save.User">
+                        <property name="name" value="zhao"/>
+                        <property name="age" value="19"/>
+                    </bean>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+</beans>
