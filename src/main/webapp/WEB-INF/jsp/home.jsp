@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<form method="post" action="message"   class="form" id="home-form">
+<form method="post"     class="form" id="home-form">
     <fieldset form="home-form"  id="home-form-filedset">
         姓名：<input id="home-name" type="text" name="home-name" placeholder="请输入你的名字" />
     <br/>

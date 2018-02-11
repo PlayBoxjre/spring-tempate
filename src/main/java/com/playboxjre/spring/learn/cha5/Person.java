@@ -1,8 +1,5 @@
 package com.playboxjre.spring.learn.cha5;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * com.playboxjre.spring.learn.cha5
  * Administrator
@@ -10,7 +7,6 @@ import org.slf4j.LoggerFactory;
  * EMAIL : playboxjre@gmail.com
  */
 public class Person {
-    Logger log = LoggerFactory.getLogger(Person.class);
     private String name;
     private int age;
 
