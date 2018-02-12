@@ -22,7 +22,8 @@
        default-autowire="byName">
     <context:component-scan base-package="com.playboxjre.spring.learn.mvc.controllers"/>
     <context:property-placeholder file-encoding="UTF-8" ignore-unresolvable="true"
-                                  location="classpath:spring/properties/*-ph.properties"/>
+                                  location="classpath:spring/properties/*.properties"/>
+
 
     <!-- 或者直接开启  <context:component-scan base-package=""-->
     <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"/>
@@ -45,6 +46,36 @@
         </mvc:interceptor>
 
     </mvc:interceptors>
+
+    <!-- Locale -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="cookieMaxAge" value="10000"/>
+        <property name="cookiePath" value="/"/>
+    </bean>
+
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+
+        <property name="paramName" value="locale"/>
+    </bean>
+    <bean id="urlMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="interceptors" ref="localeChangeInterceptor"/>
+        <property name="mappings">
+            <value>/home/**=homeController</value>
+        </property>
+    </bean>
+
+
+    <bean id="themeResource" class="org.springframework.ui.context.support.ResourceBundleThemeSource">
+        <property name="defaultEncoding" value="utf-8"/>
+    </bean>
+
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+
+    </bean>
+
+
 
     <!--<mvc:resources mapping="*.html,resources/**" location="/resources/**,/WEB-INF/resources/**"/>-->
     <!-- 视图查找器 根据视图名来匹配实际的视图文件 -->

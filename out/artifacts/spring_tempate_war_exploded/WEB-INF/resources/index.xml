@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<book>
+    <title>spring</title>
+    <description>this is spring cook book</description>
+    <price>$18.55</price>
+    <bookshop>shop:xinhua</bookshop>
+</book>

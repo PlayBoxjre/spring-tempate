@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd
+               http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/cache
+            http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+       default-autowire="byName">
+    <context:component-scan base-package="com.playboxjre.spring.learn.mvc.controllers"/>
+    <context:property-placeholder file-encoding="UTF-8" ignore-unresolvable="true"
+                                  location="classpath:spring/properties/*-ph.properties"/>
+    <context:property-placeholder location="classpath*:*.properties" file-encoding="utf-8" />
+
+    <!-- 或者直接开启  <context:component-scan base-package=""-->
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"/>
+
+    <mvc:default-servlet-handler/>
+
+    <mvc:interceptors path-matcher="mvcPathMatcher">
+        <!-- All request interceptor -->
+        <mvc:interceptor>
+            <mvc:mapping path="/async/**"/>
+            <bean id="myInterceptor" class="com.playboxjre.spring.learn.mvc.interceptors.MyInterceptor"/>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/resources/**"/>
+            <mvc:exclude-mapping path="/async/**"/>
+            <bean id="commonInterceptor" class="com.playboxjre.spring.learn.mvc.interceptors.CommonInterceptor">
+            </bean>
+        </mvc:interceptor>
+
+    </mvc:interceptors>
+
+    <!-- Locale -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="cookieMaxAge" value="10000"/>
+        <property name="cookiePath" value="/"/>
+    </bean>
+
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+
+        <property name="paramName" value="locale"/>
+    </bean>
+    <bean id="urlMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="interceptors" ref="localeChangeInterceptor"/>
+        <property name="mappings">
+            <value>/home/**=homeController</value>
+        </property>
+    </bean>
+
+
+    <bean id="themeResource" class="org.springframework.ui.context.support.ResourceBundleThemeSource">
+        <property name="defaultEncoding" value="utf-8"/>
+    </bean>
+
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+
+    </bean>
+
+
+
+    <!--<mvc:resources mapping="*.html,resources/**" location="/resources/**,/WEB-INF/resources/**"/>-->
+    <!-- 视图查找器 根据视图名来匹配实际的视图文件 -->
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean" >
+        <property name="mediaTypes">
+            <value>
+                json=application/json
+                xml=application/xml
+            </value>
+        </property>
+        <property name="defaultContentType" value="text/html"/>
+        <property name="favorParameter" value="true"/>
+        <property name="favorPathExtension" value="true"/>
+        <property name="ignoreAcceptHeader" value="false"/>
+        <property name="parameterName" value="type"/>
+        <property name="useRegisteredExtensionsOnly" value="false"/>
+    </bean>
+
+    <bean id="contentNegotiatingViewResolver"
+          class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+        <property name="viewResolvers">
+            <list>
+                <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+                <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <property name="prefix" value="/WEB-INF/jsp/"/>
+                    <property name="suffix" value=".jsp"/>
+                    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+                </bean>
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+                <bean id="myView" class="com.playboxjre.spring.learn.mvc.MyView"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="userRepo" class="com.playboxjre.spring.learn.mvc.repositories.InternalSaver">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="com.playboxjre.spring.learn.mvc.repositories.save.User">
+                <entry key="kong">
+                    <bean class="com.playboxjre.spring.learn.mvc.repositories.save.User">
+                        <property name="name" value="kong"/>
+                        <property name="age" value="189"/>
+                    </bean>
+                </entry>
+                <entry key="liu">
+                    <bean class="com.playboxjre.spring.learn.mvc.repositories.save.User">
+                        <property name="name" value="liu"/>
+                        <property name="age" value="18"/>
+                    </bean>
+                </entry>
+                <entry key="zhao">
+                    <bean class="com.playboxjre.spring.learn.mvc.repositories.save.User">
+                        <property name="name" value="zhao"/>
+                        <property name="age" value="19"/>
+                    </bean>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+
+    <util:map id="musicRepo" key-type="java.lang.String"
+              value-type="com.playboxjre.spring.learn.mvc.repositories.save.Music"
+              map-class="java.util.concurrent.ConcurrentHashMap">
+        <entry key="1">
+            <bean class="com.playboxjre.spring.learn.mvc.repositories.save.Music">
+                <property name="id" value="1"/>
+                <property name="songName" value="seve"/>
+                <property name="url" value="http://localhost:8080/music/song/seve.mp3"/>
+                <property name="songer" value="machel lavalzel"/>
+            </bean>
+        </entry>
+        <entry key="2">
+            <bean class="com.playboxjre.spring.learn.mvc.repositories.save.Music">
+                <property name="id" value="2"/>
+                <property name="songName" value="faded"/>
+                <property name="url" value="http://localhost:8080/music/song/faded.mp3"/>
+                <property name="songer" value="brunch loyer"/>
+            </bean>
+        </entry>
+        <entry key="3">
+            <bean class="com.playboxjre.spring.learn.mvc.repositories.save.Music">
+                <property name="id" value="3"/>
+                <property name="songName" value="sweet"/>
+                <property name="url" value="http://localhost:8080/music/song/sweet.mp3"/>
+                <property name="songer" value="marloon"/>
+            </bean>
+        </entry>
+    </util:map>
+
+
+</beans>
