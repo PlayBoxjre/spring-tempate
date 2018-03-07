@@ -27,7 +27,7 @@ public class UserDao {
 
     public Serializable insertUser(User user) {
          sessionFactory.getCurrentSession().saveOrUpdate(user);
-         sessionFactory.getCurrentSession().saveOrUpdate(user);
+         //sessionFactory.getCurrentSession().saveOrUpdate(user);
          return 0l;
     }
 }
